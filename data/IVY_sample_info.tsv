@@ -1,0 +1,11 @@
+tumor_name	molecular_subtype	extent_of_resection	surgery	mgmt_methylation	survival_days	egfr_amplification	initial_kps	age_in_years	CT	CTmvp	CTpan	IT	LE
+W1-1-2	Classical	Complete	primary	No	105	Yes	100	66	3	3	3	3	3
+W11-1-1	Classical, Mesenchymal	Complete	primary	Yes	1076	No	100	57	3	3	3	2	2
+W2-1-1	Classical, Neural	Complete	primary	Yes	1096	Yes	90	64	3	3	3	3	2
+W26-1-1	Neural	Complete	primary	Yes	1293		100	57	3	0	3	0	0
+W31-1-1	Proneural	Complete	primary	No	871	No	90	17	3	3	0	3	3
+W32-1-1	Proneural	Complete	primary	Yes	NA	No	90	56	3	3	3	0	0
+W5-1-1	Classical, Neural	Complete	primary	No	NA	Yes	90	64	3	3	3	3	2
+W55-1-1	Classical	Complete	primary	Yes	NA		100	52	3	3	0	3	3
+W8-1-1	Classical, Mesenchymal	Complete	primary	No	442	No	70	49	3	1	3	3	3
+W9-1-1	Proneural	Complete	primary	No	145	No	90	50	3	3	3	4	1

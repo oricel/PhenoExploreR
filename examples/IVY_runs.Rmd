@@ -1,0 +1,53 @@
+---
+title: "Ivy GAP -- Exploratory Adaptation Study"
+author: "O. Celiku"
+date: '`r format(Sys.time(), "%b %d %X %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Intrinsic and exploratory runs -- Examples
+
+## Load IVY data subset 
+```{r, message=FALSE, warning=FALSE}
+library(PhenoExploreR)
+data(IVY)
+
+require(GSVA)
+require(reshape2)
+require(foreach)
+require(doParallel)
+require(assertthat)
+require(made4)
+require(factoextra)
+require(FactoMineR)
+require(knitr)
+require(reshape2)
+require(dplyr)
+require(HistogramTools)
+require(stringr)
+require(ComplexHeatmap)
+require(plot3D)
+```
+
+
+# Example of intrinsic runs
+
+Choose a number (10) of the samples to run an intrinsic walk on.
+```{r, echo=FALSE}
+design <- c(rep(0, 10), rep(NA,30))
+#phenoWandererRes <- wander(IVY$expr[,0:40],design,IVY$motif,IVY$pathways,maxIter=10, outputDir="simulations",numMaxCores=4)
+```
+
+# Example of exploratory runs
+```{r, echo=FALSE}
+#design <- c(rep(0, 10), rep(NA,20),rep(1,10))
+#phenoExplorerRes <- explore(IVY$expr[,0:40],design,IVY$motif,IVY$pathways,maxIter=10, Jscaling=0.95, outputDir="simulations",numMaxCores=4)
+```
+
+```{r}
+sessionInfo()
+```

@@ -1,0 +1,131 @@
+---
+title: "Ivy GAP -- Exploratory Adaptation Study"
+author: "O. Celiku"
+date: '`r format(Sys.time(), "%b %d %X %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Initial data exploration
+
+## Load IVY data subset 
+```{r, message=FALSE, warning=FALSE}
+library(PhenoExploreR)
+data(IVY)
+
+require(GSVA)
+require(reshape2)
+require(foreach)
+require(doParallel)
+require(assertthat)
+require(made4)
+require(factoextra)
+require(FactoMineR)
+require(knitr)
+require(reshape2)
+require(dplyr)
+require(HistogramTools)
+require(stringr)
+require(ComplexHeatmap)
+require(plot3D)
+```
+
+## Samples per location
+```{r, message=FALSE, warning=FALSE}
+table(IVY@design) %>% 
+  as.data.frame %>%
+  rename_all(funs(c("Location", "# Samples"))) %>% 
+  kable
+```
+
+## Plot expression and pathway trajectories
+
+First gene expression level, and then pathway activity level.
+```{r, message=FALSE, warning=FALSE}
+plotPhenotypePCA(IVY, method="BGA")
+plotPhenotypePCA(IVY, expr=FALSE, method="BGA")
+```
+Standard PCA, first gene expression level, and then pathway activity level. 
+```{r, message=FALSE, warning=FALSE}
+plotPhenotypePCA(IVY, method="PCA")
+plotPhenotypePCA(IVY, expr=FALSE, method="PCA")
+```
+
+## Pathway activity variance per location
+```{r, message=FALSE, warning=FALSE, fig.height=2}
+a <- IVY@activity
+colnames(a) <- IVY@design
+
+activity.variance <- a %>% melt %>% 
+  transmute(pathway=Var1, location=Var2, activity=value) %>%
+  group_by(location, pathway) %>% 
+  summarise(sd=sd(activity))
+
+activity.variance %>% 
+  acast(location~pathway)%>% 
+  apply(1, mean) %>% 
+  round(2) %>%  
+  as.data.frame %>% 
+  rename_all(funs(c("Mean Variance"))) %>% kable
+
+ggplot(activity.variance, aes(x=sd)) +
+  geom_histogram(aes(y=..density..), colour="steelblue", fill="white", binwidth=0.01) +  
+  geom_density(alpha=.2, fill="steelblue")  + theme_minimal() + facet_wrap(~location, ncol=5)
+
+activity.variance %>% acast(location~pathway)%>%
+Heatmap(row_title="Locations", column_title="Pathways", show_column_names = FALSE, show_row_names = TRUE, name="variance")
+```
+
+
+## Compute PDD and GDD for each location pair
+
+First PDDs, and display distance distributions per location:
+```{r, message=FALSE, warning=FALSE}
+pdds <- computePDD(IVY@activity, design=IVY@design) 
+
+pdds.melt <- pdds %>% melt %>% 
+  as.data.frame() %>% 
+  transmute(pathway=Var1, distance=value, comparison=Var2) %>% 
+  mutate(location1=str_replace(comparison,"_.*",""), location2=str_replace(comparison, ".*_",""))
+
+p <- ggplot(pdds.melt, aes(x=distance)) + 
+  geom_histogram(aes(y=..density..), colour="steelblue", fill="white", binwidth=1) +   
+  geom_density(alpha=.2, fill="steelblue")  + 
+  theme_minimal() + 
+  facet_wrap(~location1+location2, ncol=5)
+p
+```
+
+Now GDDs:
+```{r, message=FALSE, warning=FALSE}
+gdds <- computePDD(IVY@activity, design=IVY@design, asGDD=TRUE) 
+
+gdds %>% as.data.frame %>% 
+  rename_all(funs(c("GDD"))) %>% 
+  kable
+```
+
+GDD histogram: 
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+gdds.melt <- pdds.melt %>% as.data.frame %>% 
+  group_by(location1,location2) %>% 
+  summarise(GDD=sum(distance)) 
+z <- matrix(NA, nrow=length(IVY@locations), ncol=length(IVY@locations))
+colnames(z) <-  IVY@locations
+rownames(z) <- IVY@locations
+apply(gdds.melt, 1, function(x){
+  z[x[1],x[2]] <<- x[3]
+  z[x[2],x[1]] <<- x[3]
+})
+z[lower.tri(z)] <- NA
+
+hist3D(z=apply(z, 2, as.numeric), theta=30, phi=30, axes=TRUE,label=TRUE, space=0.2,
+       xlab="", ylab="", zlab="GDD", mar=c(5, 5, 5, 2), alpha=0.5, border ="gray", labels=rownames(z))
+```
+
+```{r}
+sessionInfo()
+```
