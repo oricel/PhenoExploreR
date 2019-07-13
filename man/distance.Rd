@@ -2,10 +2,10 @@
 % Please edit documentation in R/PhenoExploreRWalkers.R
 \name{distance}
 \alias{distance}
-\title{Distance}
+\title{Distance of individual from destination distribution}
 \usage{
 distance(from, to)
 }
 \description{
-Distance
+Distance of individual from destination distribution
 }

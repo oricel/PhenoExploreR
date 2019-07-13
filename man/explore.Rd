@@ -6,7 +6,7 @@
 \usage{
 explore(expr, design, motif, pathways, logTransform = TRUE,
   maxIter = 100, percent = 0.8, Dsquare = 0.1, deltaT = 4,
-  alpha = 1, Jscaling = 1, outputDir = NA, numMaxCores = 1)
+  alpha = 0.5, Jscaling = 1, outputDir = NA, numMaxCores = 1)
 }
 \arguments{
 \item{expr}{Gene Expression dataset, can be matrix or data.frame of expression values}

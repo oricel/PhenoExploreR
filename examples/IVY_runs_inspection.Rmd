@@ -1,0 +1,98 @@
+---
+title: "Ivy GAP -- Exploratory Adaptation Study"
+author: "O. Celiku"
+date: '`r format(Sys.time(), "%b %d %X %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intrinsic and exploratory runs inspection -- Examples
+
+### Load intrinsic and exploratory walk examples 
+```{r, message=FALSE, warning=FALSE}
+library(PhenoExploreR)
+data(IVY)
+
+twopathways <- c("KEGG_B_CELL_RECEPTOR_SIGNALING_PATHWAY", "KEGG_DNA_REPLICATION")
+twopathways.genes <- IVY@pathways[twopathways]
+genes <- Reduce(union, twopathways.genes)
+genes.indrange <- setdiff(match(genes, rownames(IVY@expr)),NA)
+pathways.indrange <- match(twopathways, rownames(IVY@activity))
+intrinsic <- readRDS("intrinsic_run_example.RDS")
+# access walks
+w.intrinsic <- intrinsic@w
+
+exploratory <- readRDS("exploratory_run_example.RDS")
+# access walks and goal
+w.exploratory <- exploratory@w
+w.goal <- exploratory@goal
+```
+
+### Look at genes and pathway walks of individual samples
+
+#### First genes
+These are plots at the single sample level (we select sample 4 below); for select genes look at individual genes walks (default indrange is the first 10 genes; set to desired indices). First intrinsic (each gene individually first, and then together):
+
+```{r, message=FALSE, warning=FALSE, fig.width=8, fig.height=2.5}
+sample_indx <- 4
+w.intrinsic.ss <- w.intrinsic[[sample_indx]]
+# genes walk matrix
+w.intrinsic.ss.x <- w.intrinsic.ss@x
+genesWalk(w.intrinsic.ss.x, scales="fixed")
+```
+
+```{r, message=FALSE, warning=FALSE, fig.width=4, fig.height=2.5}
+allGenesWalk(w.intrinsic.ss.x, indrange=genes.indrange, ymin=-50, ymax=50)
+```
+
+Now exploratory:
+
+```{r, message=FALSE, warning=FALSE, fig.width=8, fig.height=2.5}
+w.exploratory.ss <- w.exploratory[[sample_indx]]
+w.exploratory.ss.x <- w.exploratory.ss@x
+genesWalk(w.exploratory.ss.x, scales="fixed")
+```
+
+```{r, message=FALSE, warning=FALSE, fig.width=4, fig.height=2.5}
+allGenesWalk(w.exploratory.ss.x, indrange=genes.indrange, ymin=-50, ymax=50)
+```
+
+#### Now pathways 
+
+Now repeat for pathways, at the single sample level, for select pathways: again set the pathway indices to inspect via indrange (default 1:10)
+
+```{r, fig.width=8, fig.height=2}
+# pathways walk matrix
+w.intrinsic.ss.y <- w.intrinsic.ss@y
+# use goal -- destination -- of exploratory to plot boundaries
+pathwaysWalk(w.intrinsic.ss.y, bounds=w.goal, indrange=pathways.indrange, ncol=2, scales="fixed")
+
+w.exploratory.ss.y <- w.exploratory.ss@y
+pathwaysWalk(w.exploratory.ss.y, bounds=w.goal, indrange=pathways.indrange, ncol=2, scales="fixed")
+
+```
+
+```{r, message=FALSE, warning=FALSE, fig.width=4, fig.height=2.5}
+allPathwaysWalk(w.exploratory.ss.y, indrange=pathways.indrange)
+```
+
+### Look at pathway distributions walks
+```{r, message=FALSE, warning=FALSE, fig.width=8, fig.height=3}
+distributionsWalk(w.intrinsic, startLoc="CT", destLoc = "CTmvp", IVY, pathways.indrange)
+```
+```{r, message=FALSE, warning=FALSE, fig.width=8, fig.height=3}
+distributionsWalk(w.exploratory, startLoc="CT", destLoc = "CTmvp", IVY, pathways.indrange)
+```
+
+### Look at distances to the target distribution of the exploratory samples over time
+```{r, warning=FALSE, message=FALSE, fig.width=6, fig.height=3}
+ds <- lapply(w.exploratory, function(ww) ww@d)
+allDistancesWalk(ds)
+```
+
+```{r}
+sessionInfo()
+```

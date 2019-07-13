@@ -2,15 +2,17 @@
 % Please edit documentation in R/PhenoExploreRPlots.R
 \name{plotPhenotypePCA}
 \alias{plotPhenotypePCA}
-\title{p is a phenotype object}
+\title{plot phenotype trajectories as PCA/BGA}
 \usage{
 plotPhenotypePCA(pheno, expr = TRUE, method = c("PCA", "BGA"))
 }
 \arguments{
+\item{pheno}{is a phenotype object}
+
 \item{expr}{is a flag for whether to plot gene level (TRUE) or pathway activity level}
 
 \item{method}{is a choice of "PCA" or "BGA"; default is PCA}
 }
 \description{
-p is a phenotype object
+plot phenotype trajectories as PCA/BGA
 }

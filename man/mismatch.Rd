@@ -2,10 +2,10 @@
 % Please edit documentation in R/PhenoExploreRWalkers.R
 \name{mismatch}
 \alias{mismatch}
-\title{Mismatch}
+\title{Mismatch as sum of distances}
 \usage{
 mismatch(from, to, epsilon = 3)
 }
 \description{
-Mismatch
+Mismatch as sum of distances
 }

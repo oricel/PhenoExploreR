@@ -21,31 +21,36 @@ require(reshape2)
 require(foreach)
 require(doParallel)
 require(assertthat)
-require(made4)
-require(factoextra)
-require(FactoMineR)
-require(knitr)
-require(reshape2)
-require(dplyr)
-require(HistogramTools)
-require(stringr)
-require(ComplexHeatmap)
-require(plot3D)
 ```
 
+# Examples of how to run intrinsic and exploratory runs
 
-# Example of intrinsic runs
+We recommend that these are run in batch form as the computations can require a long time, especially without utilizing parallel computation. Here we provide examples of how to run, and save results in .RDS files that can then be inspected separately.
 
-Choose a number (10) of the samples to run an intrinsic walk on.
-```{r, echo=FALSE}
-design <- c(rep(0, 10), rep(NA,30))
-#phenoWandererRes <- wander(IVY$expr[,0:40],design,IVY$motif,IVY$pathways,maxIter=10, outputDir="simulations",numMaxCores=4)
+## Example of intrinsic runs
+
+Run an intrinsic run on a location of interest, for example CT; note that maxIter is set to 250, as the computation is time intensive. Also, we are using 8 cores and parallel computation. If this option is not available reduce numMaxCores to 1. outputDir specifies where individual samples walks can be saved, and is optional.
+
+```{r, message=FALSE, warning=FALSE}
+design <- IVY@design
+design[design=="CT"] <- 0
+design[design!=0] <- NA
+phenoWandererRes <- wander(IVY@expr,design,IVY@motif,IVY@pathways,maxIter=250, outputDir="simulations",numMaxCores=8)
+saveRDS(phenoWandererRes, "intrinsic_run_example.RDS")
 ```
 
-# Example of exploratory runs
-```{r, echo=FALSE}
-#design <- c(rep(0, 10), rep(NA,20),rep(1,10))
-#phenoExplorerRes <- explore(IVY$expr[,0:40],design,IVY$motif,IVY$pathways,maxIter=10, Jscaling=0.95, outputDir="simulations",numMaxCores=4)
+## Example of exploratory runs
+
+Choose 2 locations of interst, e.g. CT and CTmpv; run for 20 steps, with scaling paramater 0.95. 
+
+```{r, message=FALSE, warning=FALSE}
+design <- IVY@design
+design[design=="CT"] <- 0
+design[design=="CTmvp"] <- 1
+design <- as.numeric(design)
+phenoExplorerRes <- explore(IVY@expr,design,IVY@motif,IVY@pathways,maxIter=250, Jscaling=0.95, outputDir="simulations",numMaxCores=8)
+
+saveRDS(phenoExplorerRes, "exploratory_run_example.RDS")
 ```
 
 ```{r}

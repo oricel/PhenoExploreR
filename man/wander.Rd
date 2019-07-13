@@ -5,8 +5,8 @@
 \title{Phenotype Wanderer}
 \usage{
 wander(expr, design, motif, pathways, logTransform = TRUE,
-  maxIter = 100, Dsquare = 0.1, deltaT = 4, alpha = 1,
-  outputDir = NA, numMaxCores = 1)
+  maxIter = 100, deltaT = 4, alpha = 0.5, outputDir = NA,
+  numMaxCores = 1)
 }
 \arguments{
 \item{expr}{Gene Expression dataset, can be matrix or data.frame of expression values}
@@ -20,8 +20,6 @@ wander(expr, design, motif, pathways, logTransform = TRUE,
 \item{logTransform}{indicates whether log transformation of expression is done initally}
 
 \item{maxIter}{numer of steps to simulate}
-
-\item{Dsquare}{noise scaling parameter}
 
 \item{deltaT}{time scaling parameter}
 

@@ -1,11 +1,11 @@
-#' Phenotype
+#' Phenotype as pathway activity
 #'
 #' @import GSVA
 pheno <- function(m, pathways, method="ssgsea", kcdf="Gaussian"){
   gsva(m, pathways, method=method, kcdf=kcdf)
 }
 
-#' Distance
+#' Distance of individual from destination distribution
 #'
 distance <- function(from, to){
   mlist <- sapply(seq(1:length(from)), function(i)
@@ -13,12 +13,13 @@ distance <- function(from, to){
   sum(mlist)
 }
 
-#' Mismatch
+#' Mismatch as sum of distances
 #'
 mismatch <- function(from, to, epsilon=3){
   sum(distance(from, to)) <= epsilon
 }
 
+#' Converged pathways
 converged <- function(from, to, pathways){
   unique(unname(unlist(pathways[sapply(seq(1:length(from)), function(i) from[i] >= to[i,1] & from[i] <= to[i,2])])))
 }
@@ -31,7 +32,6 @@ converged <- function(from, to, pathways){
 #' @param pathways list of genesets to use of phenotype
 #' @param logTransform indicates whether log transformation of expression is done initally
 #' @param maxIter numer of steps to simulate
-#' @param Dsquare noise scaling parameter
 #' @param deltaT time scaling parameter
 #' @param alpha step scaling parameter
 #' @param outputDir character vector specifying a directory where to save walker results, default is NA
@@ -53,9 +53,8 @@ wander <- function(expr,
                    pathways,
                    logTransform=TRUE,
                    maxIter=100,
-                   Dsquare = 0.1, # am not square rooting it below
                    deltaT = 4,
-                   alpha=1,
+                   alpha=0.5,
                    outputDir=NA,
                    numMaxCores=1){
   # Data type checking
@@ -173,7 +172,7 @@ explore <- function(expr,
                    percent=0.8,
                    Dsquare = 0.1, # am not square rooting it below
                    deltaT = 4,
-                   alpha=1,
+                   alpha=0.5,
                    Jscaling=1,
                    outputDir=NA,
                    numMaxCores=1){
@@ -246,7 +245,7 @@ explore <- function(expr,
         if (Jscaling < 1) {
           clist <- intersect(converged(y, a.quantiles, pathways), genes)
           DeltaJM[clist, ] = Jscaling*DeltaJM[clist,]
-          DeltaJM[setdiff(genes,clist),clist] = scaling*DeltaJM[setdiff(genes,clist),clist]
+          DeltaJM[setdiff(genes,clist),clist] = Jscaling*DeltaJM[setdiff(genes,clist),clist]
           deltaJ <- deltaJ * DeltaJM
         }
 

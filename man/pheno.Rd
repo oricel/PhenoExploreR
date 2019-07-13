@@ -2,10 +2,10 @@
 % Please edit documentation in R/PhenoExploreRWalkers.R
 \name{pheno}
 \alias{pheno}
-\title{Phenotype}
+\title{Phenotype as pathway activity}
 \usage{
 pheno(m, pathways, method = "ssgsea", kcdf = "Gaussian")
 }
 \description{
-Phenotype
+Phenotype as pathway activity
 }
