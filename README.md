@@ -39,9 +39,9 @@ The data are available in the data directory.
 
 Examples are given in the examples directory:
 
-  * IVY_overview.Rmd shows how to explore the initial data; the result should look as the corresponding .html
+  * IVY_overview.Rmd shows how to explore the initial data; the result should look as the corresponding .html; download the html to your computer to view the expected results.
   * IVY_runs.Rmd shows how to run intrinsic and exploratory simulations of the behavior; the 
   results of running this file should be saved in the same directory as intrinsic_run_example.RDS and exploratory_run_example.RDS; 
   these are not included in the directory due to the large size.
   * IVY_runs_inspection.Rmd shows how to inspect and plot various aspects of the simulated data; the results 
-  should look similar to the corresponding .html, although the results may differ as new simulations produce somewhat different results.
+  should look similar to the corresponding .html, although the results may differ as new simulations produce somewhat different results; download the html to your computer to view the expected results.
